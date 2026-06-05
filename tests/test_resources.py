@@ -31,16 +31,29 @@ class TestResources:
         from hdx.analysis.resources.__main__ import get_resources
 
         datasets = [
-            make_dataset("zoo-dataset", [
-                make_resource("b-file", "CSV", "http://example.com/b", hash_="abc"),
-                make_resource("a-file", "XLSX", "http://example.com/a", hash_="xyz"),
-            ]),
-            make_dataset("alpha-dataset", [
-                make_resource("data", "JSON", "http://example.com/data", hash_="111"),
-            ]),
+            make_dataset(
+                "zoo-dataset",
+                [
+                    make_resource("b-file", "CSV", "http://example.com/b", hash_="abc"),
+                    make_resource(
+                        "a-file", "XLSX", "http://example.com/a", hash_="xyz"
+                    ),
+                ],
+            ),
+            make_dataset(
+                "alpha-dataset",
+                [
+                    make_resource(
+                        "data", "JSON", "http://example.com/data", hash_="111"
+                    ),
+                ],
+            ),
         ]
 
-        with patch("hdx.analysis.resources.__main__.Dataset.get_all_datasets", return_value=datasets):
+        with patch(
+            "hdx.analysis.resources.__main__.Dataset.get_all_datasets",
+            return_value=datasets,
+        ):
             rows = get_resources()
 
         assert rows[0]["dataset_name"] == "alpha-dataset"
@@ -52,8 +65,15 @@ class TestResources:
         from hdx.analysis.resources.__main__ import FIELDS, save_csv
 
         rows = [
-            {"dataset_name": "ds", "resource_name": "r", "format": "CSV",
-             "hash": "abc", "url": "http://x.com", "last_modified": "2024-01-01", "broken_link": False},
+            {
+                "dataset_name": "ds",
+                "resource_name": "r",
+                "format": "CSV",
+                "hash": "abc",
+                "url": "http://x.com",
+                "last_modified": "2024-01-01",
+                "broken_link": False,
+            },
         ]
         out = str(tmp_path / "out.csv")
         save_csv(rows, out)
