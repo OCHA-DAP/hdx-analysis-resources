@@ -26,12 +26,15 @@ FIELDS = [
     "last_modified",
     "broken_link",
     "url",
+    "dataset_id",
+    "resource_id",
 ]
 
 
 def get_resources() -> list[dict]:
     rows = []
     for dataset in Dataset.get_all_datasets():
+        dataset_id = dataset["id"]
         dataset_name = dataset["name"]
         for resource in dataset.get_resources():
             rows.append(
@@ -44,11 +47,11 @@ def get_resources() -> list[dict]:
                     "last_modified": resource.get("last_modified", ""),
                     "broken_link": resource.get("broken_link", ""),
                     "url": resource["url"],
+                    "dataset_id": dataset_id,
+                    "resource_id": resource["id"],
                 }
             )
-    rows.sort(
-        key=lambda r: (r["dataset_name"], r["resource_name"], r["format"], r["hash"])
-    )
+    rows.sort(key=lambda r: r["dataset_name"])
     return rows
 
 
