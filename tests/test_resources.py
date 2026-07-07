@@ -40,14 +40,14 @@ class TestResources:
                     make_resource(
                         "b-file",
                         "CSV",
-                        "http://example.com/b",
+                        "http://example.com/b.csv",
                         resource_id="r-b",
                         hash_="abc",
                     ),
                     make_resource(
                         "a-file",
                         "XLSX",
-                        "http://example.com/a",
+                        "http://example.com/a.xlsx",
                         resource_id="r-a",
                         hash_="xyz",
                     ),
@@ -60,7 +60,7 @@ class TestResources:
                     make_resource(
                         "data",
                         "JSON",
-                        "http://example.com/data",
+                        "http://example.com/data.json",
                         resource_id="r-data",
                         hash_="111",
                     ),
@@ -78,12 +78,15 @@ class TestResources:
         assert rows[0]["dataset_name"] == "alpha-dataset"
         assert rows[0]["dataset_id"] == "d-alpha"
         assert rows[0]["resource_id"] == "r-data"
+        assert rows[0]["extension"] == "json"
         assert rows[1]["dataset_name"] == "zoo-dataset"
         assert rows[1]["dataset_id"] == "d-zoo"
         assert rows[1]["resource_name"] == "b-file"
         assert rows[1]["resource_id"] == "r-b"
+        assert rows[1]["extension"] == "csv"
         assert rows[2]["resource_name"] == "a-file"
         assert rows[2]["resource_id"] == "r-a"
+        assert rows[2]["extension"] == "xlsx"
 
     def test_save_csv(self, tmp_path, configuration):
         from hdx.analysis.resources.__main__ import FIELDS, save_csv
@@ -95,9 +98,10 @@ class TestResources:
                 "resource_name": "r",
                 "resource_id": "r-1",
                 "format": "CSV",
+                "extension": "csv",
                 "hash": "abc",
                 "size": "1024",
-                "url": "http://x.com",
+                "url": "http://x.com/file.csv",
                 "last_modified": "2024-01-01",
                 "broken_link": False,
             },
@@ -114,4 +118,5 @@ class TestResources:
         assert written[0]["dataset_name"] == "ds"
         assert written[0]["dataset_id"] == "d-1"
         assert written[0]["resource_id"] == "r-1"
+        assert written[0]["extension"] == "csv"
         assert written[0]["hash"] == "abc"

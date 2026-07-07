@@ -6,6 +6,7 @@ from pathlib import Path
 from hdx.data.dataset import Dataset
 from hdx.facades.simple import facade
 from hdx.utilities.easy_logging import setup_logging
+from hdx.utilities.url import get_filename_extension_from_url
 
 from ._version import __version__
 
@@ -21,6 +22,7 @@ FIELDS = [
     "dataset_name",
     "resource_name",
     "format",
+    "extension",
     "hash",
     "size",
     "last_modified",
@@ -37,16 +39,20 @@ def get_resources() -> list[dict]:
         dataset_id = dataset["id"]
         dataset_name = dataset["name"]
         for resource in dataset.get_resources():
+            url = resource["url"]
+            _, extension = get_filename_extension_from_url(url)
+            extension = extension.lstrip(".")
             rows.append(
                 {
                     "dataset_name": dataset_name,
                     "resource_name": resource["name"],
                     "format": resource.get_format(),
+                    "extension": extension,
                     "hash": resource.get("hash", ""),
                     "size": resource.get("size", ""),
                     "last_modified": resource.get("last_modified", ""),
                     "broken_link": resource.get("broken_link", ""),
-                    "url": resource["url"],
+                    "url": url,
                     "dataset_id": dataset_id,
                     "resource_id": resource["id"],
                 }
